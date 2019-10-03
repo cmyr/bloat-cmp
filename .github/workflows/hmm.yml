@@ -7,18 +7,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+      - name: mkdir
+        run mkdir '.bloatcmp'
       - name: Write file one
-        run: echo 'hello 123456' > master.txt
+        run: echo 'hello 123456' > '.bloatcmp/old.txt'
         shell: bash
       - name: Write file two
-        run: echo 'hello 125456' > new.txt
+        run: echo 'hello 125456' > '.bloatcmp/new.txt'
         shell: bash
-      - name: compare sizes
-        uses: ./ # Uses an action in the root directory
+      - name: compare
+        uses: ./compare # Uses an action in the root directory
         id: bloatcmp
-        with:
-         base_sizes: 'master.txt'
-         new_sizes: 'new.txt'
       # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+      - name: Get the output
+        run: echo "The time was ${{ steps.compare.outputs.bloat_stats }}"
