@@ -24,6 +24,13 @@ test('single item', async () => {
     expect(Object.keys(result)).toEqual(['abc']);
 });
 
+test('objify', async () => {
+    let inp = 'hello 123456';
+    expect(bloat.objify(inp)).toEqual(new Map([['hello', '123456']]));
+    let inp2 = 'hello 123456\n';
+    expect(bloat.objify(inp2)).toEqual(new Map([['hello', '123456']]));
+});
+
 // shows how the runner will run a javascript action with env / stdout protocol
 // test('test runs', () => {
 //     process.env['INPUT_MILLISECONDS'] = 500;

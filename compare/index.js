@@ -21,7 +21,3 @@ try {
 } catch (error) {
   core.setFailed(error.message);
 }
-
-function objify(string) {
-  return new Map(string.split('\n').map(line => line.split(' ')).filter(arr => arr.length == 2 && arr[0].length > 0))
-}
