@@ -1,0 +1,28 @@
+on:
+  pull_request_review_comment:
+    types: [created, edited]
+
+jobs:
+  check_comment:
+    runs-on: ubuntu-latest
+    name: A job to show me errors
+    #if: github.event.comment.body == "+bloatcheck"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: mkdir
+        run: mkdir '.bloatcmp'
+      - name: Write file one
+        run: echo 'hello 123456' > '.bloatcmp/old.txt'
+        shell: bash
+      - name: Write file two
+        run: echo 'hello 125456' > '.bloatcmp/new.txt'
+        shell: bash
+      - name: compare
+        uses: ./compare # Uses an action in the root directory
+        id: bloatcmp
+      - name: comment
+        uses: ./reply-to-pr-comment
+        with:
+          bloat_stats: ${{ steps.bloatcmp.outputs.bloat_stats }}
+          myToken: ${{ secrets.GITHUB_TOKEN }}
