@@ -10,21 +10,26 @@ try {
 
     console.log(markdownText);
 
-    const octokit = new github.GitHub(myToken);
-    const newComment = await octokit.pulls.createCommentReply({
-        owner: context.payload.pull_request.repo.owner.id,
-        repo: context.payload.pull_request.repo.id,
-        pull_number: context.payload.pull_request.number,
-        commit_id: context.payload.comment.commit_id,
-        body: markdownText,
-        path: context.payload.comment.path,
-        position: context.payload.comment.position,
-        in_reply_to: context.payload.comment.id
-    });
-    console.log(newComment);
-    // Get the JSON webhook payload for the event that triggered the workflow
-    //const payload = JSON.stringify(github.context.payload, undefined, 2)
+    const context = github.context;
+
+    //const payload = JSON.stringify(context.payload, undefined, 2);
     //console.log(`The event payload: ${payload}`);
+
+    const postArgs = {
+        owner: context.payload.repository.owner.login,
+        repo: context.payload.repository.name,
+        issue_number: context.payload.issue.number,
+        body: markdownText,
+    };
+    let response = postComment(myToken, postArgs);
+    console.log(response);
+    // Get the JSON webhook payload for the event that triggered the workflow
 } catch (error) {
     core.setFailed(error.message);
+}
+
+async function postComment(token, postArgs) {
+    const octokit = new github.GitHub(token, {log: console});
+    var response = await octokit.issues.createComment(postArgs).then(ok => console.log('okay? ' + ok)).catch(err => console.log('error? :( ' + err));
+    return response;
 }
