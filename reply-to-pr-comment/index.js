@@ -23,7 +23,7 @@ try {
     };
     let response = postComment(myToken, postArgs);
     console.log(response);
-    // Get the JSON webhook payload for the event that triggered the workflow
+
 } catch (error) {
     core.setFailed(error.message);
 }

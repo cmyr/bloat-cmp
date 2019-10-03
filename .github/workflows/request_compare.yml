@@ -6,7 +6,7 @@ jobs:
   check_comment:
     runs-on: ubuntu-latest
     name: A job to show me errors
-    #if: github.event.comment.body == "+bloatcheck"
+    if: startsWith(github.event.comment.body, '/bloat')
     steps:
       - name: Checkout
         uses: actions/checkout@v1
