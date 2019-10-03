@@ -1,12 +1,7 @@
-//const wait = require('./wait');
 const bloat = require('./bloat');
 const process = require('process');
 const cp = require('child_process');
 const path = require('path');
-
-// test('throws invalid number', async() => {
-//     await expect(wait('foo')).rejects.toThrow('milleseconds not a number');
-// });
 
 test('smoke test', async () => {
     let one = 'abc 200\nhello 346';
@@ -16,6 +11,17 @@ test('smoke test', async () => {
     expect(result.abc.diff).toEqual(20);
     expect(result.abc.percent).toEqual('10.00%');
     expect(result.missing).toEqual(null);
+});
+
+test('single item', async () => {
+    let one = 'abc 200';
+    let two = 'abc 220';
+
+    let result = bloat.bloatcmp(one, two);
+
+    expect(result.abc.diff).toEqual(20);
+    expect(result.abc.percent).toEqual('10.00%');
+    expect(Object.keys(result)).toEqual(['abc']);
 });
 
 // shows how the runner will run a javascript action with env / stdout protocol

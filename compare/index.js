@@ -9,10 +9,10 @@ try {
   const base_sizes = fs.readFileSync(inDir + '/old.txt').toString();
   const new_sizes = fs.readFileSync(inDir + '/new.txt').toString();
 
-  console.log('base: ' + base_sizes);
-  console.log('new: ' + new_sizes);
+  console.log('base: \'' + base_sizes + '\'');
+  console.log('new: \'' + new_sizes + '\'');
 
-  const result = bloatcmp(base_sizes, new_sizes);
+  const result = JSON.stringify(bloatcmp.bloatcmp(base_sizes, new_sizes));
 
   core.setOutput("bloat_stats", result);
   // Get the JSON webhook payload for the event that triggered the workflow
@@ -23,5 +23,5 @@ try {
 }
 
 function objify(string) {
-  return new Map(string.split('\n').map(line => line.split(' ')))
+  return new Map(string.split('\n').map(line => line.split(' ')).filter(arr => arr.length == 2 && arr[0].length > 0))
 }

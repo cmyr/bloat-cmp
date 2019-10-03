@@ -3,7 +3,7 @@ let bloatcmp = function (oldStats, newStats) {
   const oldMap = objify(oldStats);
   const newMap = objify(newStats);
 
-  var results = {};
+  var results = new Object()
 
   for (var [key, newSize] of newMap) {
     var oldSize = oldMap.get(key);
