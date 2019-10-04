@@ -7,20 +7,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      #- name: mkdir
-        #run: mkdir '.bloatcmp'
-      #- name: Write file one
-        #run: echo 'hello 123456' > '.bloatcmp/old.txt'
-        #shell: bash
-      #- name: Write file two
-        #run: echo 'hello 1254568' > '.bloatcmp/new.txt'
-        #shell: bash
-      #- run: ls -la
+        with:
+          rev: master
       - name: get old sizes
         id: old
         uses: ./get-sizes
         with:
           paths: .github/workflows/hmm.yml get-sizes/index.js compare/index.js
+      - name: Checkout
+        uses: actions/checkout@v1
       - name: get new sizes
         id: new
         uses: ./get-sizes
@@ -33,5 +28,10 @@ jobs:
             old: ${{ steps.old.outputs.rawSizes }}
             new: ${{ steps.new.outputs.rawSizes }}
       # Use the output from the `hello` step
+      - name: comment
+        uses: ./reply-to-pr-comment
+        with:
+          stats: ${{ steps.bloatcmp.outputs.stats }}
+          myToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Get the output
-        run: echo "output = ${{ steps.bloatcmp.outputs.bloat_stats }}"
+        run: echo "output = ${{ steps.bloatcmp.outputs.stats }}"

@@ -1,6 +1,5 @@
 
 let bloatcmp = function (oldSizes, newSizes) {
-
   var results = new Object()
 
   for (var [key, newSize] of Object.entries(newSizes.sizes)) {
