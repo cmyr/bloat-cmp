@@ -4,7 +4,7 @@ const comment = require('./comment');
 
 try {
 
-    const myInput = core.getInput('bloat_stats', { required: true });
+    const myInput = core.getInput('stats', { required: true });
     const myToken = core.getInput('myToken');
     const markdownText = comment.formatComment(myInput);
 

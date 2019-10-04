@@ -7,25 +7,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: mkdir
-        run: mkdir '.bloatcmp'
-      - name: Write file one
-        run: echo 'hello 123456' > '.bloatcmp/old.txt'
-        shell: bash
-      - name: Write file two
-        run: echo 'hello 1254568' > '.bloatcmp/new.txt'
-        shell: bash
-      - run: ls -la
+      #- name: mkdir
+        #run: mkdir '.bloatcmp'
+      #- name: Write file one
+        #run: echo 'hello 123456' > '.bloatcmp/old.txt'
+        #shell: bash
+      #- name: Write file two
+        #run: echo 'hello 1254568' > '.bloatcmp/new.txt'
+        #shell: bash
+      #- run: ls -la
       - name: get old sizes
         id: old
         uses: ./get-sizes
         with:
-          paths: .bloatcmp/old.txt
+          paths: .github/workflows/hmm.yml get-sizes/index.js compare/index.js
       - name: get new sizes
         id: new
         uses: ./get-sizes
         with:
-          paths: .bloatcmp/new.txt
+          paths: .github/workflows/hmm.yml get-sizes/index.js compare/index.js
       - name: compare
         uses: ./compare # Uses an action in the root directory
         id: bloatcmp
