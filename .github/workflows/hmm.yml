@@ -13,8 +13,15 @@ jobs:
         run: echo 'hello 123456' > '.bloatcmp/old.txt'
         shell: bash
       - name: Write file two
-        run: echo 'hello 125456' > '.bloatcmp/new.txt'
+        run: echo 'hello 1254568' > '.bloatcmp/new.txt'
         shell: bash
+      - run: ls -la
+      - name: try getting sizes
+        uses: ./get-sizes
+        with:
+          tag: old
+          paths: .bloatcmp/old.txt .bloatcmp/new.txt
+        id: getsize
       - name: compare
         uses: ./compare # Uses an action in the root directory
         id: bloatcmp

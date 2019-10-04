@@ -1,0 +1,12 @@
+name: 'Bloat Get Size'
+description: 'output names & sizes for a list of binaries'
+inputs:
+    paths:
+        description: 'list of paths to check'
+        required: true
+outputs:
+    rawSizes:
+        description: 'map of binary names to size in bytes'
+runs:
+  using: 'node12'
+  main: 'index.js'

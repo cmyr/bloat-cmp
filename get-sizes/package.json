@@ -1,0 +1,20 @@
+{
+  "name": "bench-cmp-get-sizes",
+  "version": "1.0.0",
+  "description": "output names & sizes for a list of binaries",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmyr/bloat-cmp"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cmyr/bloat-cmp/issues"
+  },
+  "homepage": "https://github.com/cmyr/bloat-cmp",
+  "dependencies": {
+    "@actions/core": "^1.1.3"
+  }
+}
