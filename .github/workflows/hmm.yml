@@ -25,6 +25,12 @@ jobs:
         uses: ./get-sizes
         with:
           paths: .github/workflows/hmm.yml get-sizes/index.js compare/index.js
+      - name: Get the output
+        env:
+          TO_PRINT: ${{ toJson(steps.new.outputs.rawSizes) }}
+        run: echo "output = $TO_PRINT"
+      - name: Get the output2
+        run: echo "output = ${{ toJson(steps.new.outputs.rawSizes) }}"
       - name: compare
         uses: ./compare # Uses an action in the root directory
         id: bloatcmp
@@ -37,5 +43,3 @@ jobs:
         with:
           stats: ${{ steps.bloatcmp.outputs.stats }}
           myToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: Get the output
-        run: echo "output = ${{ steps.bloatcmp.outputs.stats }}"

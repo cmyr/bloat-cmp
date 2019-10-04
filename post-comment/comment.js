@@ -1,8 +1,5 @@
 
-let formatComment = function (statsJson) {
-  console.log('raw object: ' + statsJson);
-  const statsObj = JSON.parse(statsJson);
-  console.log('obj: ' + statsObj);
+let formatComment = function (statsObj) {
   if (Object.keys(statsObj).length == 0) {
     throw Error('empty stats object');
   }

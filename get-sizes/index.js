@@ -14,7 +14,7 @@ try {
         sizes[path] = fileSizeInBytes;
     }
 
-    const result = JSON.stringify({commit: sha, sizes: sizes });
+    const result = {commit: sha, sizes: sizes };
     core.setOutput('rawSizes', result);
 
 } catch (error) {

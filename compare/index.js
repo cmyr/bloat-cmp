@@ -4,10 +4,8 @@ const bloatcmp = require('./bloat');
 try {
   const oldSizes = core.getInput('old');
   const newSizes = core.getInput('new');
-  let oldObj = JSON.parse(oldSizes);
-  let newObj = JSON.parse(newSizes);
 
-  const result = JSON.stringify(bloatcmp.bloatcmp(oldObj, newObj));
+  const result = bloatcmp.bloatcmp(oldSizes, newSizes);
   core.setOutput("stats", result);
 
 } catch (error) {
