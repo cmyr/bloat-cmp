@@ -1,22 +1,32 @@
 
-let formatComment = function (statsJson) {
-  console.log('raw object: ' + statsJson);
-  const statsObj = JSON.parse(statsJson);
-  console.log('obj: ' + statsObj);
-  if (Object.keys(statsObj).length == 0) {
-    throw Error('empty stats object');
+let formatComment = function (statsObj) {
+
+  if (Object.keys(statsObj.files).length == 0) {
+    throw Error('no files in stats');
   }
 
-  var result = 'target|old size|new size|difference\n---|---|---|---\n';
-  for (var [key, stats] of Object.entries(statsObj)) {
+  let oldSha = statsObj.old_sha.substring(0, 8);
+  let newSha = statsObj.new_sha.substring(0, 8);
+
+  var result = `### 🗜 Bloat check ⚖️\nComparing ${newSha} against ${oldSha}\n\ntarget|old size|new size|difference\n---|---|---|---\n`;
+  for (var [key, stats] of Object.entries(statsObj.files)) {
     console.log(key, stats);
     if (stats === null) {
       result = result + key + '|missing|n/a|n/a\n';
     } else {
-      result = result + key + '|' + formatBytes(stats.oldSize) + '|' + formatBytes(stats.newSize) + '|' + stats.percent + '\n';
+      let difference = formatDifference(stats.diff, stats.percent);
+      result = result + `${key} | ${formatBytes(stats.oldSize)} | ${formatBytes(stats.newSize)} | ${difference}\n`;
     }
   }
     return result
+}
+
+function formatDifference(dSize, percent) {
+    if (dSize == 0) {
+        return '---';
+    } else {
+        return `${formatBytes(dSize)} (${percent})`;
+    }
 }
 
 let makeStats = function (oldSize, newSize) {

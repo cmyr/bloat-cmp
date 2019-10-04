@@ -7,8 +7,14 @@ try {
   let oldObj = JSON.parse(oldSizes);
   let newObj = JSON.parse(newSizes);
 
-  const result = JSON.stringify(bloatcmp.bloatcmp(oldObj, newObj));
-  core.setOutput("stats", result);
+  let files = bloatcmp.bloatcmp(oldObj, newObj);
+    let result = {
+        old_sha: oldObj.commit,
+        new_sha: newObj.commit,
+        files,
+    };
+
+  core.setOutput("stats", JSON.stringify(result));
 
 } catch (error) {
   core.setFailed(error.message);

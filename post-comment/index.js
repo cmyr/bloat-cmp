@@ -4,7 +4,15 @@ const comment = require('./comment');
 
 try {
 
-    const myInput = core.getInput('stats', { required: true });
+    const myInputJson = core.getInput('stats', { required: true });
+  const myInput = JSON.parse(myInputJson);
+
+    if (myInput.old_sha == myInput.new_sha) {
+        //TODO: we should be aborting way earlier in this case?
+        console.log('supressing post; commits are equal');
+        return;
+    }
+
     const myToken = core.getInput('myToken');
     const body = comment.formatComment(myInput);
 
