@@ -29,7 +29,7 @@ jobs:
             new: ${{ steps.new.outputs.rawSizes }}
       # Use the output from the `hello` step
       - name: comment
-        uses: ./reply-to-pr-comment
+        uses: ./post-comment
         with:
           stats: ${{ steps.bloatcmp.outputs.stats }}
           myToken: ${{ secrets.GITHUB_TOKEN }}
