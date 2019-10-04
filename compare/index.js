@@ -1,18 +1,24 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
 const fs = require('fs');
 const bloatcmp = require('./bloat');
 
 try {
-  const inDir = core.getInput('bloat_dir');
+  const oldSizes = core.getInput('old');
+  const newSizes = core.getInput('new');
 
-  const base_sizes = fs.readFileSync(inDir + '/old.txt').toString();
-  const new_sizes = fs.readFileSync(inDir + '/new.txt').toString();
+  console.log('old ' + oldSizes);
+  console.log('new ' + newSizes);
 
-  console.log('base: \'' + base_sizes + '\'');
-  console.log('new: \'' + new_sizes + '\'');
+  let oldObj = JSON.parse(oldSizes);
+  let newObj = JSON.parse(newSizes);
 
-  const result = JSON.stringify(bloatcmp.bloatcmp(base_sizes, new_sizes));
+  //const base_sizes = fs.readFileSync(inDir + '/old.txt').toString();
+  //const new_sizes = fs.readFileSync(inDir + '/new.txt').toString();
+
+  //console.log('base: \'' + base_sizes + '\'');
+  //console.log('new: \'' + new_sizes + '\'');
+
+  const result = JSON.stringify(bloatcmp.bloatcmp(oldObj, newObj));
 
   core.setOutput("bloat_stats", result);
   // Get the JSON webhook payload for the event that triggered the workflow

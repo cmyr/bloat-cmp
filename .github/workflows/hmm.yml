@@ -16,15 +16,22 @@ jobs:
         run: echo 'hello 1254568' > '.bloatcmp/new.txt'
         shell: bash
       - run: ls -la
-      - name: try getting sizes
+      - name: get old sizes
+        id: old
         uses: ./get-sizes
         with:
-          tag: old
-          paths: .bloatcmp/old.txt .bloatcmp/new.txt
-        id: getsize
+          paths: .bloatcmp/old.txt
+      - name: get new sizes
+        id: new
+        uses: ./get-sizes
+        with:
+          paths: .bloatcmp/new.txt
       - name: compare
         uses: ./compare # Uses an action in the root directory
         id: bloatcmp
+        with:
+            old: ${{ steps.old.outputs.rawSizes }}
+            new: ${{ steps.new.outputs.rawSizes }}
       # Use the output from the `hello` step
       - name: Get the output
         run: echo "output = ${{ steps.bloatcmp.outputs.bloat_stats }}"

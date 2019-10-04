@@ -5,7 +5,7 @@ on:
 jobs:
   check_comment:
     runs-on: ubuntu-latest
-    name: A job to show me errors
+    name: Compare bloat when asked nicely
     if: startsWith(github.event.comment.body, '/bloat')
     steps:
       - name: Checkout

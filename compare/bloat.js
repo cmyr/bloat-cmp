@@ -1,12 +1,13 @@
 
-let bloatcmp = function (oldStats, newStats) {
-  const oldMap = objify(oldStats);
-  const newMap = objify(newStats);
+let bloatcmp = function (oldSizes, newSizes) {
+  //const oldMap = oldSizes.sizes
+  //const newMap = objify(newSizes);
+
 
   var results = new Object()
 
-  for (var [key, newSize] of newMap) {
-    var oldSize = oldMap.get(key);
+  for (var [key, newSize] of Object.entries(newSizes.sizes)) {
+    var oldSize = oldSizes.sizes[key];
     if (oldSize === undefined) {
       results[key] = null;
       console.log('item ' + key + ' does not exist in baseline.');
@@ -28,12 +29,12 @@ let makeStats = function (oldSize, newSize) {
   }
 }
 
-function objify(string) {
-  return new Map(string.split('\n').map(line => line.split(' ')).filter(arr => arr.length == 2 && arr[0].length > 0))
-}
+//function objify(string) {
+  //return new Map(string.split('\n').map(line => line.split(' ')).filter(arr => arr.length == 2 && arr[0].length > 0))
+//}
 
 module.exports = {
   bloatcmp: bloatcmp,
-  makeStats: makeStats,
-  objify: objify
+  makeStats: makeStats
+  //objify: objify
 }
