@@ -3,7 +3,6 @@ const fs = require('fs');
 
 try {
     const paths = core.getInput('paths', { required: true });
-    console.log('paths: ' + paths);
     const sha = require('child_process')
         .execSync('git rev-parse HEAD')
         .toString().trim();
@@ -16,7 +15,6 @@ try {
     }
 
     const result = JSON.stringify({commit: sha, sizes: sizes });
-    console.log(result);
     core.setOutput('rawSizes', result);
 
 } catch (error) {

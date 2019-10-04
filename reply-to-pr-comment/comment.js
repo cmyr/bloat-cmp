@@ -15,8 +15,8 @@ let formatComment = function (statsJson) {
     } else {
       result = result + key + '|' + formatBytes(stats.oldSize) + '|' + formatBytes(stats.newSize) + '|' + stats.percent + '\n';
     }
-    return result
   }
+    return result
 }
 
 let makeStats = function (oldSize, newSize) {
