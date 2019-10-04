@@ -8,7 +8,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
         with:
-          rev: master
+          ref: master
       - name: get old sizes
         id: old
         uses: ./get-sizes
