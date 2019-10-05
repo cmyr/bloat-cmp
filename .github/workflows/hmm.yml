@@ -1,10 +1,29 @@
 on:
-  push:
+  #push:
   pull_request:
   issue_comment:
     types: [created, edited]
 
+
 jobs:
+
+  get_base_rev:
+    runs-on: macOS-10.14
+    name: build the base rev
+    steps:
+      - name: print event
+        run: echo "output = ${{ toJSON(github.event) }}"
+
+      - name: checkout pr base
+        if: github.eventName == 'pull_request'
+        uses: actions/checkout@v1
+        with:
+          ref: ${{ github.event.base.ref }}
+
+      - name: checkout master
+        if: github.eventName == 'issue_comment'
+        uses: actions/checkout@v1
+
   test_job:
     runs-on: ubuntu-latest
     name: A job to show me errors
