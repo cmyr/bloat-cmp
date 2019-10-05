@@ -1,0 +1,21 @@
+{
+  "name": "bench-cmp-get-revs",
+  "version": "1.0.0",
+  "description": "determine revisions to compare based on event type",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmyr/bloat-cmp"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cmyr/bloat-cmp/issues"
+  },
+  "homepage": "https://github.com/cmyr/bloat-cmp",
+  "dependencies": {
+    "@actions/core": "^1.1.3",
+    "@actions/github": "^1.1.0"
+  }
+}

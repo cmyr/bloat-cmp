@@ -1,0 +1,10 @@
+name: 'Bloat Get Revs'
+description: 'Get revisions to compare based on event type'
+outputs:
+    base:
+        description: 'the base revision'
+    head:
+        description: 'the head revision'
+runs:
+  using: 'node12'
+  main: 'index.js'
