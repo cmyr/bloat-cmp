@@ -4,7 +4,6 @@ on:
   issue_comment:
     types: [created, edited]
 
-
 jobs:
 
   get_base_rev:
@@ -12,17 +11,51 @@ jobs:
     name: build the base rev
     steps:
       - name: print event
-        run: echo "output = ${{ toJSON(github.event) }}"
+        run: echo "${{ github.event_name }} -> ${{ toJSON(github.event) }}"
 
-      - name: checkout pr base
-        if: github.eventName == 'pull_request'
+      - name: get base of pull_request
+        if: github.event_name == 'pull_request'
         uses: actions/checkout@v1
         with:
           ref: ${{ github.event.base.ref }}
 
-      - name: checkout master
-        if: github.eventName == 'issue_comment'
+      - name: get base of issue_comment pr
+        if: github.event_name == 'issue_comment' && github.event.issue.pull_request != null
         uses: actions/checkout@v1
+
+      - name: build
+        run: echo 'do your build in here'
+
+      - name: get sizes
+        id: sizes
+        uses: ./get-sizes
+        with:
+          paths: .github/workflows/hmm.yml get-sizes/index.js compare/index.js
+
+      - name: debug print sizes
+        run: echo "output = ${{ steps.bloatcmp.outputs.stats }}"
+
+  #get_new_rev:
+    #runs-on: macOS-10.14
+    #name: build the new rev
+    #steps:
+      #- name: print event
+        #run: echo "${{ github.eventName }}: ${{ toJSON(github.event) }}"
+
+      #- name: checkout pr
+        #if: github.eventName == 'pull_request'
+        #uses: actions/checkout@v1
+        #run: touch .bloat-got-rev
+
+      #- name: checkout commented pr
+        #if: (github.eventName == 'issue_comment' && github.event.issue.pull_request != null)
+        #uses: actions/checkout@v1
+        #with:
+          #ref: 'pull/${{ github.event.issue.number }}/head'
+        #run: touch .bloat-got-rev
+
+      #- name: ensure checkout
+        #run: cat .bloat-got-rev
 
   test_job:
     runs-on: ubuntu-latest
