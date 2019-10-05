@@ -6,56 +6,37 @@ on:
 
 jobs:
 
-  get_base_rev:
-    runs-on: macOS-10.14
-    name: build the base rev
+  test_get_revs:
+    runs-on: ubuntu-latest
+    name: test the get-rev action
     steps:
-      - name: print event
-        run: echo "${{ github.event_name }} -> ${{ toJSON(github.event) }}"
-
-      - name: get base of pull_request
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v1
-        with:
-          ref: ${{ github.event.base.ref }}
-
-      - name: get base of issue_comment pr
-        if: github.event_name == 'issue_comment' && github.event.issue.pull_request != null
+      - name: checkout
         uses: actions/checkout@v1
 
-      - name: build
-        run: echo 'do your build in here'
+      - name: get revisions
+        id: get_revs
+        uses: ./get-revs
 
-      - name: get sizes
-        id: sizes
-        uses: ./get-sizes
+      - name: print output
+        run: |
+         echo "base = ${{ steps.get_revs.outputs.base }}" &&
+         echo "head = ${{ steps.get_revs.outputs.head }}"
+
+      - name: test checkout one
+        uses: actions/checkout@v1
         with:
-          paths: .github/workflows/hmm.yml get-sizes/index.js compare/index.js
+          ref: ${{ steps.get_revs.outputs.base }}
 
-      - name: debug print sizes
-        run: echo "output = ${{ steps.bloatcmp.outputs.stats }}"
+      - name: print ref
+        run: echo $(git rev-parse HEAD)
 
-  #get_new_rev:
-    #runs-on: macOS-10.14
-    #name: build the new rev
-    #steps:
-      #- name: print event
-        #run: echo "${{ github.eventName }}: ${{ toJSON(github.event) }}"
+      - name: test checkout two
+        uses: actions/checkout@v1
+        with:
+          ref: ${{ steps.get_revs.outputs.head }}
 
-      #- name: checkout pr
-        #if: github.eventName == 'pull_request'
-        #uses: actions/checkout@v1
-        #run: touch .bloat-got-rev
-
-      #- name: checkout commented pr
-        #if: (github.eventName == 'issue_comment' && github.event.issue.pull_request != null)
-        #uses: actions/checkout@v1
-        #with:
-          #ref: 'pull/${{ github.event.issue.number }}/head'
-        #run: touch .bloat-got-rev
-
-      #- name: ensure checkout
-        #run: cat .bloat-got-rev
+      - name: print ref
+        run: echo $(git rev-parse HEAD)
 
   test_job:
     runs-on: ubuntu-latest
