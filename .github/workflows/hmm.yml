@@ -5,38 +5,6 @@ on:
 
 jobs:
 
-  #test_get_revs:
-    #runs-on: ubuntu-latest
-    #name: test the get-rev action
-    #steps:
-      #- name: checkout
-        #uses: actions/checkout@v1
-
-      #- name: get revisions
-        #id: get_revs
-        #uses: ./get-revs
-
-      #- name: print output
-        #run: |
-         #echo "base = ${{ steps.get_revs.outputs.base }}" &&
-         #echo "head = ${{ steps.get_revs.outputs.head }}"
-
-      #- name: test checkout one
-        #uses: actions/checkout@v1
-        #with:
-          #ref: ${{ steps.get_revs.outputs.base }}
-
-      #- name: print ref
-        #run: echo $(git rev-parse HEAD)
-
-      #- name: test checkout two
-        #uses: actions/checkout@v1
-        #with:
-          #ref: ${{ steps.get_revs.outputs.head }}
-
-      #- name: print ref
-        #run: echo $(git rev-parse HEAD)
-
   all_together:
     runs-on: ubuntu-latest
     name: the full bloat-cmp workflow
