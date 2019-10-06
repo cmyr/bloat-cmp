@@ -6,10 +6,15 @@ try {
     switch (context.eventName) {
         case "pull_request":
             core.setOutput('base', context.payload.pull_request.base.ref);
-            core.setOutput(`pull/${context.payload.pull_request.number}/merge`);
+            core.setOutput('head', context.payload.pull_request.head.sha);
             break;
         case "issue_comment":
-            console.log(`issue comment ${JSON.stringify(context.payload.comment.body)}`);
+            let cmd = core.getInput('command');
+            if (!context.payload.comment.body.startsWith(cmd)) {
+                core.setFailed(`ignoring comment that doesn't begin with ${cmd}`);
+                return;
+            }
+
             let maybeRevs = maybeGetRevsFromComment(context.payload.comment.body);
             if (maybeRevs != null) {
                 console.log(`using manual revs: ${maybeRevs}`);
@@ -24,11 +29,8 @@ try {
                     repo: context.payload.repository.name,
                     pull_number: context.payload.issue.number,
                 }).then(({ data }) => {
-                    let head = `pull/${data.number}/merge`;
-                    let base = data.base.ref;
-                    console.log(`got head '${head}' base '${base}'`);
-                    core.setOutput('base', base);
-                    core.setOutput('head', head);
+                    core.setOutput('base', data.base.ref);
+                    core.setOutput('head', data.head.sha);
                 }).catch(({ err }) => {
                     console.log(`ERR: ${err}`);
                     core.setFailed(err);

@@ -1,6 +1,9 @@
 name: 'Bloat Get Revs'
 description: 'Get revisions to compare based on event type'
 inputs:
+    command:
+        description: 'the command keyword to look for in comments'
+        default: '/bloat'
     myToken:
         description: 'GitHub API token'
         required: true

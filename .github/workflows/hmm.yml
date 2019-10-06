@@ -48,6 +48,7 @@ jobs:
         id: get_revs
         uses: ./get-revs
         with:
+          command: /bloat
           myToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: checkout base
