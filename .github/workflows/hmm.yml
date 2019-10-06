@@ -48,6 +48,8 @@ jobs:
       - name: get revisions
         id: get_revs
         uses: ./get-revs
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: checkout base
         uses: actions/checkout@v1

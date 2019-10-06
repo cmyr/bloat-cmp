@@ -37,6 +37,7 @@ try {
 
 async function getBaseRev(pull_number) {
   try {
+    const myToken = core.getInput('myToken');
     const octokit = new github.GitHub(myToken, { log: console });
     const { data: pullRequest } = await octokit.pulls.get({ owner: github.context.payload.repository.owner.login, repo: github.context.payload.repository.name, pull_number });
     return pullRequest.base.ref;
