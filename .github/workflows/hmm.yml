@@ -5,8 +5,7 @@ on:
     types: [created, edited]
 
 jobs:
-
-  test_get_revs:
+  get_revs:
     runs-on: ubuntu-latest
     name: test the get-rev action
     steps:
@@ -37,6 +36,57 @@ jobs:
 
       - name: print ref
         run: echo $(git rev-parse HEAD)
+  
+  build_base:
+    needs: get_revs
+    runs-on: ubuntu-latest
+    name: build the base targets
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+        with:
+          ref: ${{ jobs.get_revs.steps.get_revs.outputs.head }}
+      - name: get old sizes
+        id: old
+        uses: ./get-sizes
+        with:
+          paths: .github/workflows/hmm.yml get-sizes/index.js compare/index.js
+
+  build_head:
+    needs: get_revs
+    runs-on: ubuntu-latest
+    name: build the head targets
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+        with:
+          ref: ${{ jobs.get_revs.steps.get_revs.outputs.head }}
+      - name: get new sizes
+        id: new
+        uses: ./get-sizes
+        with:
+          paths: .github/workflows/hmm.yml get-sizes/index.js compare/index.js
+
+  compare:
+    needs: [build_base, build_head]
+    runs-on: ubuntu-latest
+    name: compare outputs and post comment
+    steps:
+      - name: compare
+        uses: ./compare # Uses an action in the root directory
+        id: bloatcmp
+        with:
+            old: ${{ jobs.build_base.steps.old.outputs.rawSizes }}
+            new: ${{ jobs.build_head.steps.new.outputs.rawSizes }}
+
+      - name: comment
+        uses: ./post-comment
+        with:
+          stats: ${{ steps.bloatcmp.outputs.stats }}
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get the output
+        run: echo "output = ${{ steps.bloatcmp.outputs.stats }}"
 
   test_job:
     runs-on: ubuntu-latest
