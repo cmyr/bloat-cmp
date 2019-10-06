@@ -5,6 +5,7 @@ try {
     const context = github.context;
     switch (context.eventName) {
         case "pull_request":
+            core.setOutput('fetch', `pull/${context.payload.pull_request.number}/merge`)
             core.setOutput('base', context.payload.pull_request.base.ref);
             core.setOutput('head', context.payload.pull_request.head.sha);
             break;
@@ -30,6 +31,7 @@ try {
                     pull_number: context.payload.issue.number,
                 }).then(({ data }) => {
                     core.setOutput('base', data.base.ref);
+                    core.setOutput('fetch', `pull/${data.number}/merge`)
                     core.setOutput('head', data.head.sha);
                 }).catch(({ err }) => {
                     console.log(`ERR: ${err}`);

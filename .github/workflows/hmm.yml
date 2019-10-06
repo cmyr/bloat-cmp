@@ -51,6 +51,10 @@ jobs:
           command: /bloat
           myToken: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: fetch refs
+        run: git fetch origin ${{ steps.get_revs.outputs.fetch }}
+        if: steps.get_revs.outputs.fetch != ''
+
       - name: checkout base
         uses: actions/checkout@v1
         with:

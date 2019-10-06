@@ -10,6 +10,8 @@ inputs:
 outputs:
     base:
         description: 'the base revision'
+    fetch:
+        description: 'path to fetch to retrieve revisions'
     head:
         description: 'the head revision'
 runs:
