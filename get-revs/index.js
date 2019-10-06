@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-
+// see if external PRs work as expected
 try {
     const context = github.context;
     switch (context.eventName) {
