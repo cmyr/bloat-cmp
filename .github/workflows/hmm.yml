@@ -6,9 +6,41 @@ on:
 
 jobs:
 
-  test_get_revs:
+  #test_get_revs:
+    #runs-on: ubuntu-latest
+    #name: test the get-rev action
+    #steps:
+      #- name: checkout
+        #uses: actions/checkout@v1
+
+      #- name: get revisions
+        #id: get_revs
+        #uses: ./get-revs
+
+      #- name: print output
+        #run: |
+         #echo "base = ${{ steps.get_revs.outputs.base }}" &&
+         #echo "head = ${{ steps.get_revs.outputs.head }}"
+
+      #- name: test checkout one
+        #uses: actions/checkout@v1
+        #with:
+          #ref: ${{ steps.get_revs.outputs.base }}
+
+      #- name: print ref
+        #run: echo $(git rev-parse HEAD)
+
+      #- name: test checkout two
+        #uses: actions/checkout@v1
+        #with:
+          #ref: ${{ steps.get_revs.outputs.head }}
+
+      #- name: print ref
+        #run: echo $(git rev-parse HEAD)
+
+  all_together:
     runs-on: ubuntu-latest
-    name: test the get-rev action
+    name: the full bloat-cmp workflow
     steps:
       - name: checkout
         uses: actions/checkout@v1
@@ -17,26 +49,49 @@ jobs:
         id: get_revs
         uses: ./get-revs
 
-      - name: print output
-        run: |
-         echo "base = ${{ steps.get_revs.outputs.base }}" &&
-         echo "head = ${{ steps.get_revs.outputs.head }}"
-
-      - name: test checkout one
+      - name: checkout base
         uses: actions/checkout@v1
         with:
           ref: ${{ steps.get_revs.outputs.base }}
 
-      - name: print ref
-        run: echo $(git rev-parse HEAD)
+      - name: get base sizes
+        if: steps.get_revs.outputs.base != steps.get_revs.outputs.head
+        id: base
+        uses: ./get-sizes
+        with:
+          paths: .github/workflows/hmm.yml get-sizes/index.js compare/index.js
 
-      - name: test checkout two
+      - name: checkout head
         uses: actions/checkout@v1
         with:
           ref: ${{ steps.get_revs.outputs.head }}
 
-      - name: print ref
-        run: echo $(git rev-parse HEAD)
+      - name: get head sizes
+        if: steps.get_revs.outputs.base != steps.get_revs.outputs.head
+        id: head
+        uses: ./get-sizes
+        with:
+          paths: .github/workflows/hmm.yml get-sizes/index.js compare/index.js
+
+      - name: compare
+        if: steps.get_revs.outputs.base != steps.get_revs.outputs.head
+        uses: ./compare # Uses an action in the root directory
+        id: bloatcmp
+        with:
+            old: ${{ steps.base.outputs.rawSizes }}
+            new: ${{ steps.head.outputs.rawSizes }}
+
+
+      - name: comment
+        if: steps.get_revs.outputs.base != steps.get_revs.outputs.head
+        uses: ./post-comment
+        with:
+          stats: ${{ steps.bloatcmp.outputs.stats }}
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get the output
+        run: echo "output = ${{ steps.bloatcmp.outputs.stats }}"
+
 
   test_job:
     runs-on: ubuntu-latest

@@ -36,9 +36,14 @@ try {
 }
 
 async function getBaseRev(pull_number) {
+  try {
     const octokit = new github.GitHub(myToken, { log: console });
-    let result = await octokit.pulls.get({ owner: github.context.payload.repository.owner.login, repo: github.context.payload.repository.name, pull_number });
-    return result
+    const { data: pullRequest } = await octokit.pulls.get({ owner: github.context.payload.repository.owner.login, repo: github.context.payload.repository.name, pull_number });
+    return pullRequest.base.ref;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
 }
 
 // we accept comments in the form of '/bloat master..438afbd
