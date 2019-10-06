@@ -22,7 +22,6 @@ try {
                 core.setOutput('base', maybeRevs[0]);
                 core.setOutput('head', maybeRevs[1]);
             } else if ('pull_request' in context.payload.issue) {
-
                 const myToken = core.getInput('myToken');
                 const octokit = new github.GitHub(myToken, { log: console });
                 octokit.pulls.get({
@@ -48,18 +47,6 @@ try {
 } catch (error) {
     core.setFailed(error.message);
 }
-
-//async function getBaseRev(pull_number) {
-//try {
-//const myToken = core.getInput('myToken');
-//const octokit = new github.GitHub(myToken, { log: console });
-//const { data: pullRequest } = await octokit.pulls.get({ owner: github.context.payload.repository.owner.login, repo: github.context.payload.repository.name, pull_number });
-//return pullRequest.base.ref;
-//} catch (e) {
-//console.log(e);
-//throw e;
-//}
-//}
 
 // we accept comments in the form of '/bloat master..438afbd
 function maybeGetRevsFromComment(comment) {
